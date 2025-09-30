@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi'
+import { useAccount, useWriteContract } from 'wagmi'
+import { Address } from 'viem'
 import { parseEther } from 'viem'
 
 // 示例ERC20代币合约ABI
@@ -17,8 +18,8 @@ const erc20Abi = [
 ] as const
 
 interface ContractInteractionProps {
-  contractAddress?: string
-  abi?: any
+  contractAddress?: Address
+  abi?: Array<any>
 }
 
 /**
@@ -29,24 +30,27 @@ export const ContractInteraction: React.FC<ContractInteractionProps> = ({
   contractAddress: defaultContractAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F', // DAI合约地址作为示例
   abi: defaultAbi = erc20Abi,
 }) => {
-  const { address, isConnected } = useAccount()
-  const [contractAddress, setContractAddress] = useState(defaultContractAddress)
-  const [abi, setAbi] = useState(defaultAbi)
-  const [functionName, setFunctionName] = useState('transfer')
-  const [recipient, setRecipient] = useState('')
-  const [amount, setAmount] = useState('')
-  const [customAbi, setCustomAbi] = useState('')
-
-  // 准备合约写操作
-  const { config } = usePrepareContractWrite({
-    address: contractAddress,
-    abi: abi,
-    functionName: functionName,
-    args: [recipient, parseEther(amount)],
-  })
+    const { isConnected } = useAccount()
+    const [contractAddress, setContractAddress] = useState<Address>(defaultContractAddress)
+    const [abi, setAbi] = useState(defaultAbi)
+    const [functionName, setFunctionName] = useState('transfer')
+    const [recipient, setRecipient] = useState<Address>('')
+    const [amount, setAmount] = useState('')
+    const [customAbi, setCustomAbi] = useState('')
 
   // 合约写操作
-  const { data, isLoading, isSuccess, write, error } = useContractWrite(config)
+  const { writeContract, isPending, data: txHash, error } = useWriteContract()
+
+  const handleSubmit = () => {
+    if (contractAddress && abi && functionName && recipient && amount) {
+      writeContract({
+        address: contractAddress,
+        abi: abi,
+        functionName: functionName,
+        args: [recipient, parseEther(amount)],
+      })
+    }
+  }
 
   const handleCustomAbiChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCustomAbi(e.target.value)
@@ -61,11 +65,7 @@ export const ContractInteraction: React.FC<ContractInteractionProps> = ({
     }
   }
 
-  const handleSubmit = () => {
-    if (write) {
-      write()
-    }
-  }
+
 
   if (!isConnected) {
     return (
@@ -135,10 +135,10 @@ export const ContractInteraction: React.FC<ContractInteractionProps> = ({
 
       <button
         onClick={handleSubmit}
-        disabled={!write || isLoading}
+        disabled={isPending}
         className="submit-btn"
       >
-        {isLoading ? '处理中...' : '调用合约'}
+        {isPending ? '处理中...' : '调用合约'}
       </button>
 
       {error && (
@@ -147,9 +147,9 @@ export const ContractInteraction: React.FC<ContractInteractionProps> = ({
         </div>
       )}
 
-      {isSuccess && (
+      {txHash && (
         <div className="success-message">
-          交易成功! Hash: {data?.hash.substring(0, 10)}...
+          交易成功! Hash: {txHash.substring(0, 10)}...
         </div>
       )}
     </div>

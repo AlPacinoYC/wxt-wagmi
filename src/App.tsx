@@ -1,4 +1,3 @@
-import React from 'react'
 import { Web3Provider } from './Web3Provider'
 import { WalletConnectButton } from './components/WalletConnectButton'
 import { BalanceDisplay } from './components/BalanceDisplay'
