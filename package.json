@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@wagmi/connectors": "^5.11.2",
+    "ethers": "^6.13.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "viem": "^2.37.9",
     "wagmi": "^2.17.5"
   },
   "devDependencies": {
@@ -27,9 +27,6 @@
     "globals": "^16.4.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.44.0",
-    "vite": "npm:rolldown-vite@7.1.12"
-  },
-  "overrides": {
-    "vite": "npm:rolldown-vite@7.1.12"
+    "vite": "^5.0.0"
   }
 }

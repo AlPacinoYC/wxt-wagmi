@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useAccount, useWriteContract } from 'wagmi'
-import { Address } from 'viem'
-import { parseEther } from 'viem'
+import { ethers } from 'ethers'
 
 // 示例ERC20代币合约ABI
 const erc20Abi = [
@@ -15,10 +14,10 @@ const erc20Abi = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
-] as const
+]
 
 interface ContractInteractionProps {
-  contractAddress?: Address
+  contractAddress?: string
   abi?: Array<any>
 }
 
@@ -31,10 +30,10 @@ export const ContractInteraction: React.FC<ContractInteractionProps> = ({
   abi: defaultAbi = erc20Abi,
 }) => {
     const { isConnected } = useAccount()
-    const [contractAddress, setContractAddress] = useState<Address>(defaultContractAddress)
+    const [contractAddress, setContractAddress] = useState<string>(defaultContractAddress)
     const [abi, setAbi] = useState(defaultAbi)
     const [functionName, setFunctionName] = useState('transfer')
-    const [recipient, setRecipient] = useState<Address>('')
+    const [recipient, setRecipient] = useState<string>('')
     const [amount, setAmount] = useState('')
     const [customAbi, setCustomAbi] = useState('')
 
@@ -44,10 +43,10 @@ export const ContractInteraction: React.FC<ContractInteractionProps> = ({
   const handleSubmit = () => {
     if (contractAddress && abi && functionName && recipient && amount) {
       writeContract({
-        address: contractAddress,
+        address: contractAddress as `0x${string}`,
         abi: abi,
         functionName: functionName,
-        args: [recipient, parseEther(amount)],
+        args: [recipient as `0x${string}`, ethers.parseEther(amount)],
       })
     }
   }

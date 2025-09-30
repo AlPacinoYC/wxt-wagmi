@@ -16,7 +16,7 @@
 - TypeScript
 - Vite
 - Wagmi - Web3钱包连接库
-- Viem - 以太坊交互库
+- ethers.js - 以太坊交互库
 
 ## 安装和运行
 
