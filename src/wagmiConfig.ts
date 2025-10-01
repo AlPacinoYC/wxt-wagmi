@@ -1,9 +1,6 @@
-import { createConfig, http } from 'wagmi'
 import { mainnet, sepolia } from 'wagmi/chains'
-import { metaMask } from '@wagmi/connectors'
-import { coinbaseWallet } from '@wagmi/connectors'
-import { walletConnect } from '@wagmi/connectors'
 import { QueryClient } from '@tanstack/react-query'
+import { getDefaultConfig } from '@rainbow-me/rainbowkit'
 
 // 创建QueryClient实例
 export const queryClient = new QueryClient({
@@ -16,21 +13,10 @@ export const queryClient = new QueryClient({
   },
 })
 
-// 创建wagmi配置
-export const config = createConfig({
+// 创建RainbowKit配置并直接导出为config
+export const config = getDefaultConfig({
+  appName: 'Web3 钱包示例',
+  projectId: 'YOUR_PROJECT_ID', // 可以从 WalletConnect 官网获取
   chains: [mainnet, sepolia],
-  connectors: [
-    metaMask(),
-    coinbaseWallet({
-      appName: 'Web3 钱包示例',
-    }),
-    walletConnect({
-      projectId: 'YOUR_PROJECT_ID', // 可以从 WalletConnect 官网获取
-    }),
-  ],
-  transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(),
-  },
   ssr: true,
 })

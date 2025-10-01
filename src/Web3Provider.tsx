@@ -2,6 +2,8 @@ import React, { type ReactNode } from 'react'
 import { WagmiProvider } from 'wagmi'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { config, queryClient } from './wagmiConfig'
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import '@rainbow-me/rainbowkit/styles.css'
 
 interface Web3ProviderProps {
   children: ReactNode
@@ -15,7 +17,9 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <WagmiProvider config={config}>
-        {children}
+        <RainbowKitProvider>
+          {children}
+        </RainbowKitProvider>
       </WagmiProvider>
     </QueryClientProvider>
   )
