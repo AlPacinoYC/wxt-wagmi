@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useAccount, useBalance } from 'wagmi'
-import { Card, Typography, Spin, Alert, Empty, Row, Col, Button } from 'antd'
-import { WalletOutlined, CopyOutlined, LockOutlined } from '@ant-design/icons'
+import { Card, Typography, Spin, Alert, Empty, Button } from 'antd'
+import { CopyOutlined, LockOutlined } from '@ant-design/icons'
 import { message } from 'antd'
-
-const { Text, Title } = Typography
 
 /**
  * 余额显示组件
@@ -61,7 +59,6 @@ export const BalanceDisplay: React.FC = () => {
       <Empty
         image={Empty.PRESENTED_IMAGE_SIMPLE}
         description="请先连接钱包"
-        icon={<WalletOutlined style={{ fontSize: 64, color: '#999' }} />}
         className="py-12"
       />
     )

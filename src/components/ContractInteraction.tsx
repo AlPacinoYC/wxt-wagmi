@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useAccount, useWriteContract } from 'wagmi'
 import { ethers } from 'ethers'
-import { Card, Form, Input, Button, Typography, Alert, message, Empty, Tooltip, Switch } from 'antd'
+import { Card, Form, Input, Button, Typography, message, Empty, Tooltip, Switch } from 'antd'
 import { CodeOutlined, CopyOutlined, CheckOutlined, UpSquareOutlined , ArrowUpOutlined , BorderVerticleOutlined , LockOutlined } from '@ant-design/icons'
 
-const { Title } = Typography
 const { TextArea } = Input
 
 // 示例ERC20代币合约ABI
@@ -21,16 +20,37 @@ const erc20Abi = [
   },
 ]
 
+interface ContractInput {
+  name: string
+  type: string
+  internalType: string
+}
+
+interface ContractOutput {
+  name?: string
+  type: string
+  internalType?: string
+}
+
+// ABI项类型定义
+export interface ContractAbiItem {
+  name: string
+  inputs: ContractInput[]
+  outputs?: ContractOutput[]
+  stateMutability: string
+  type: string
+}
+
 interface ContractInteractionProps {
   contractAddress?: string
-  abi?: Array<any>
+  abi?: ContractAbiItem[]
 }
 
 // 合约函数类型
 interface ContractFunction {
   name: string
-  inputs: Array<{ name: string; type: string; internalType: string }>
-  outputs?: Array<any>
+  inputs: ContractInput[]
+  outputs?: ContractOutput[]
   stateMutability: string
 }
 
@@ -116,7 +136,7 @@ export const ContractInteraction: React.FC<ContractInteractionProps> = ({
       setAbi(parsedAbi)
       message.success('ABI 应用成功')
     } catch (e) {
-      message.error('无效的ABI格式，请检查JSON语法')
+      message.error(`无效的ABI格式，请检查JSON语法: ${e}`)
     }
   }
 
@@ -125,14 +145,13 @@ export const ContractInteraction: React.FC<ContractInteractionProps> = ({
       <Empty
         image={Empty.PRESENTED_IMAGE_SIMPLE}
         description="请先连接钱包"
-        icon={<LockOutlined style={{ fontSize: 64, color: '#999' }} />}
         className="py-12"
       />
     )
   }
 
   // 获取当前ABI中的所有函数
-  const contractFunctions = abi.filter((item: any) => item.type === 'function') as ContractFunction[]
+  const contractFunctions = abi.filter((item: ContractAbiItem) => item.type === 'function') as ContractFunction[]
 
   return (
     <Card className="border-0 shadow-lg overflow-hidden transition-all duration-500 hover:shadow-xl">
