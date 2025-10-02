@@ -2,6 +2,9 @@ import { mainnet, sepolia } from 'wagmi/chains'
 import { QueryClient } from '@tanstack/react-query'
 import { getDefaultConfig } from '@rainbow-me/rainbowkit'
 
+// 导出链配置，供其他组件使用
+export const supportedChains = [mainnet, sepolia]
+
 // 创建QueryClient实例
 export const queryClient = new QueryClient({
   defaultOptions: {

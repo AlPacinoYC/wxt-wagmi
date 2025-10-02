@@ -1,5 +1,4 @@
 import { BalanceDisplay } from './components/BalanceDisplay'
-import React from 'react'
 import { ContractInteraction } from './components/ContractInteraction'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useDisconnect, useAccount } from 'wagmi'

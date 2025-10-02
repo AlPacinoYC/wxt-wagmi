@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useAccount, useBalance } from 'wagmi'
+import { useAccount, useBalance, useChainId } from 'wagmi'
 import { Card, Typography, Spin, Alert, Empty, Button } from 'antd'
 import { CopyOutlined, LockOutlined } from '@ant-design/icons'
 import { message } from 'antd'
+import { supportedChains } from '../wagmiConfig'
 
 /**
  * 余额显示组件
@@ -10,9 +11,9 @@ import { message } from 'antd'
  */
 export const BalanceDisplay: React.FC = () => {
   const { address } = useAccount()
-  const { data: balance, isLoading, error } = useBalance({
-    address,
-  })
+  const { data: balance, isLoading, error } = useBalance({ address })
+  const chainId = useChainId()
+  // 尝试获取链信息，包含链名称
   const [showFullAddress, setShowFullAddress] = useState(false)
   const [copied, setCopied] = useState(false)
   const [animatedBalance, setAnimatedBalance] = useState('0')
@@ -53,6 +54,16 @@ export const BalanceDisplay: React.FC = () => {
       return () => clearInterval(timer)
     }
   }, [balance?.formatted])
+
+  // 从支持的链中查找当前链信息
+  const getCurrentChain = () => {
+    if (chainId) {
+      return supportedChains.find(chain => chain.id === chainId)
+    }
+    return undefined
+  }
+
+  const currentChain = getCurrentChain()
 
   if (!address) {
     return (
@@ -182,7 +193,7 @@ export const BalanceDisplay: React.FC = () => {
               <div className="bg-white p-4 rounded-lg">
                 <Typography.Text type="secondary" className="text-xs block mb-1">网络</Typography.Text>
                 <Typography.Text className="text-gray-800">
-                  {balance.chain.name} ({balance.chain.id})
+                  {currentChain ? `${currentChain.name} (ID: ${currentChain.id})` : chainId ? `Chain ID: ${chainId}` : '网络信息获取中...'}
                 </Typography.Text>
               </div>
             </div>
