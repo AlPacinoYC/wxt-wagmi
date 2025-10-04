@@ -103,7 +103,7 @@ export const GreeterContract: React.FC = () => {
         {/* 当前问候语展示 */}
         <div className="mb-8">
           <Text strong className="text-gray-700">
-            当前问候语
+            当前问候语<Button onClick={() => refetch()} className="ml-2">更新数据</Button>
           </Text>
           <div className="mt-4 p-6 bg-gray-50 rounded-xl border border-gray-200">
             {isReading ? (

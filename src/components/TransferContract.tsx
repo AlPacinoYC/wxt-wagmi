@@ -36,7 +36,8 @@ export const TransferContract: React.FC = () => {
   const {
     data: totalContractBalance,
     isLoading: isReadingTotalContractBalance,
-    error: totalBalanceError
+    error: totalBalanceError,
+    refetch: refetchTotalBalance
   } = useReadContract({
     abi: transferContract.abi,
     address: transferContract.address as `0x${string}`,
@@ -75,21 +76,17 @@ export const TransferContract: React.FC = () => {
     if (refetchUserBalance) {
       refetchUserBalance();
     }
-  }, [refetchUserBalance]);
+    if (refetchTotalBalance) {
+      refetchTotalBalance();
+    }
+
+  }, [refetchUserBalance, refetchTotalBalance]);
 
   // 监听合约转账事件，实现实时余额更新
   useWatchContractEvent({
     abi: transferContract.abi,
     address: transferContract.address as `0x${string}`,
     eventName: 'TransferEvent',
-    // 当检测到转账事件时自动刷新余额
-    onLogs: handleContractEvent,
-  });
-
-    useWatchContractEvent({
-    abi: transferContract.abi,
-    address: transferContract.address as `0x${string}`,
-    eventName: 'TransferEvent1',
     // 当检测到转账事件时自动刷新余额
     onLogs: handleContractEvent,
   });
@@ -224,7 +221,7 @@ export const TransferContract: React.FC = () => {
         {/* 合约总余额展示 */}
         <div className="mb-8">
           <Text strong className="text-gray-700">
-            合约总余额
+            合约总余额<Button onClick={() => refetchTotalBalance()} className="ml-2">更新数据</Button>
           </Text>
           <div className="mt-4 p-6 bg-gray-50 rounded-xl border border-gray-200">
             {isReadingTotalContractBalance ? (
@@ -251,7 +248,7 @@ export const TransferContract: React.FC = () => {
         {/* 用户在合约中的余额展示 */}
         <div className="mb-8">
           <Text strong className="text-gray-700">
-            您在合约中的余额
+            您在合约中的余额<Button onClick={() => refetchUserBalance()} className="ml-2">更新数据</Button>
           </Text>
           <div className="mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
             {isReadingUserContractBalance ? (

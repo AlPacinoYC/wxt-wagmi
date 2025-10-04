@@ -4,8 +4,7 @@ import { GreeterContract } from './components/GreeterContract'
 import { TransferContract } from './components/TransferContract'
 import { WalletConnectButton } from './components/WalletConnectButton'
 import { NetworkDiagnostic } from './components/NetworkDiagnostic'
-import { useDisconnect, useAccount } from 'wagmi'
-import { Layout, Typography, Card, Row, Col, Button, ConfigProvider } from 'antd'
+import { Layout, Typography, Card, Row, Col, ConfigProvider } from 'antd'
 import { WalletOutlined, TransactionOutlined, SplitCellsOutlined } from '@ant-design/icons'
 import 'antd/dist/reset.css'
 
@@ -42,8 +41,6 @@ const { Title, Paragraph, Text } = Typography
 // };
 
 function App() {
-  const { disconnect } = useDisconnect()
-  const { isConnected } = useAccount()
 
   return (
     <ConfigProvider>
@@ -87,25 +84,8 @@ function App() {
             </Title>
             <Row gutter={16} align="middle">
               <Col>
-                <div className="min-w-[240px]">
-                  <WalletConnectButton />
-                </div>
+                <WalletConnectButton />
               </Col>
-              
-              {/* 断开连接按钮 - 仅在已连接状态下显示 */}
-              {isConnected && (
-                <Col>
-                <Button
-                  onClick={() => disconnect()}
-                  type="primary"
-                  danger
-                  size="large"
-                  className="transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
-                >
-                  断开连接
-                </Button>
-              </Col>
-              )}
             </Row>
           </Card>
           
