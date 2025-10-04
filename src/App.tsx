@@ -1,6 +1,9 @@
 import { BalanceDisplay } from './components/BalanceDisplay'
 import { ContractInteraction } from './components/ContractInteraction'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { GreeterContract } from './components/GreeterContract'
+import { TransferContract } from './components/TransferContract'
+import { WalletConnectButton } from './components/WalletConnectButton'
+import { NetworkDiagnostic } from './components/NetworkDiagnostic'
 import { useDisconnect, useAccount } from 'wagmi'
 import { Layout, Typography, Card, Row, Col, Button, ConfigProvider } from 'antd'
 import { WalletOutlined, TransactionOutlined, SplitCellsOutlined } from '@ant-design/icons'
@@ -85,10 +88,7 @@ function App() {
             <Row gutter={16} align="middle">
               <Col>
                 <div className="min-w-[240px]">
-                  <ConnectButton
-                    accountStatus={{ smallScreen: 'avatar', largeScreen: 'full' }}
-                    showBalance={{ smallScreen: false, largeScreen: true }}
-                  />
+                  <WalletConnectButton />
                 </div>
               </Col>
               
@@ -118,6 +118,9 @@ function App() {
             <BalanceDisplay />
           </Card>
           
+          {/* 网络诊断部分 */}
+          <NetworkDiagnostic />
+          
           {/* 智能合约交互部分 */}
           <Card className="mb-8 shadow-lg border-0 hover:shadow-xl transition-shadow duration-300">
             <Title level={3} className="mb-4 flex items-center gap-2">
@@ -125,6 +128,12 @@ function App() {
               智能合约交互
             </Title>
             <ContractInteraction />
+            <div className="mt-8">
+              <GreeterContract />
+            </div>
+            <div className="mt-8">
+              <TransferContract />
+            </div>
           </Card>
         </div>
       </Content>
